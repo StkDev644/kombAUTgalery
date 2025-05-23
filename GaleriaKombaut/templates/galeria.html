@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Galeria de Imagens</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Galeria de Imagens</h1>
+    <a class="ccc" href="/">Voltar</a>
+    <hr>
+    <div class="galeria">
+        {% for img in imagens %}
+            {% set idx = loop.index0 %}
+            <div class="imagem">
+                <img src="{{ img.url }}" alt="Imagem">
+                <p><strong>Nome:</strong> {{ img.nome }}</p>
+                <p><strong>Data:</strong> {{ img.data }}</p>
+
+                {% if session.get('logado') %}
+                    <form action="{{ url_for('excluir', index=idx) }}" method="POST">
+                        <button type="submit">Excluir</button>
+                    </form>
+                    <form action="{{ url_for('mover', index=idx, direcao='cima') }}" method="POST" style="display:inline;">
+                        <button type="submit">↑</button>
+                    </form>
+                    <form action="{{ url_for('mover', index=idx, direcao='baixo') }}" method="POST" style="display:inline;">
+                        <button type="submit">↓</button>
+                    </form>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
