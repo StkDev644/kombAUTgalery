@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Galeria de Imagens</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+
+<style>
+    .marca-superior {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: #ff0000;
+    font-weight: 600;
+    opacity: 0.9;
+    letter-spacing: 1px;
+    z-index: 999;
+}
+
+</style>
+</head>
+<body>
+    <div class="marca-superior">KombAUT 2025–2027</div>
+    <h1>Galeria de Imagens</h1>
+    <a class="ccc" href="/">Voltar</a>
+    <hr>
+    <div class="galeria">
+        {% for img in imagens %}
+            {% set idx = loop.index0 %}
+            <div class="imagem">
+                <img src="{{ img.url }}" alt="Imagem">
+                <p><strong>Nome:</strong> {{ img.nome }}</p>
+                <p><strong>Data:</strong> {{ img.data }}</p>
+
+                {% if session.get('logado') %}
+                    <form action="{{ url_for('excluir', index=idx) }}" method="POST">
+                        <button type="submit">Excluir</button>
+                    </form>
+                    <form action="{{ url_for('mover', index=idx, direcao='cima') }}" method="POST" style="display:inline;">
+                        <button type="submit">↑</button>
+                    </form>
+                    <form action="{{ url_for('mover', index=idx, direcao='baixo') }}" method="POST" style="display:inline;">
+                        <button type="submit">↓</button>
+                    </form>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+<footer class="rodape">
+    <p>&copy; 2025 KombAUT - Todos os direitos reservados.</p>
+    <p>Desenvolvido por 
+        <a href="https://github.com/StkDev644" target="_blank">Caíque Dornelas</a>
+    </p>
+</footer>
+</body>
+</html>

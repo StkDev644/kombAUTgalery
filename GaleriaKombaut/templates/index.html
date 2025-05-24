@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <title>Galeria | KombAUT</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="website icon" type="png" href="/images/WhatsApp Image 2025-05-15 at 18.07.31.jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+
+    <style>
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(135deg, #eed6d6, #eee2e2);
+            color: #f0f0f0;
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+            border: 2px solid #ff000055;
+            border-radius: 20px;
+            padding: 40px 20px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: red;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="file"],
+        input[type="password"],
+        button {
+            width: 100%;
+            padding: 16px;
+            margin: 12px 0;
+            border: none;
+            border-radius: 8px;
+            background-color: #1e1e1e;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+        button {
+            background-color: #a00000;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #ff0000;
+            color: #000;
+        }
+
+        .senha-container {
+            position: relative;
+        }
+
+        .senha-container input {
+            padding-right: 48px;
+        }
+
+        #iconeSenha {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            font-size: 1.4rem;
+            color: #ff0000;
+            cursor: pointer;
+        }
+
+        .botoes {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .preview {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .preview img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 0 12px rgba(255, 0, 0, 0.3);
+        }
+
+        .rodape {
+    width: 100%;
+    text-align: center;
+    margin-top: auto;
+    padding: 20px 0;
+    color: #888;
+    font-size: 0.7rem;
+}
+
+.rodape a {
+    color: #ff0000;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.rodape a:hover {
+    text-decoration: underline;
+}
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 16px;
+            }
+
+            input,
+            button {
+                font-size: 1.1rem;
+                padding: 16px;
+            }
+
+            #iconeSenha {
+                font-size: 1.5rem;
+                right: 15px;
+            }
+        }
+        .marca-superior {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: #ff0000;
+    font-weight: 600;
+    opacity: 0.9;
+    letter-spacing: 1px;
+    z-index: 999;
+}
+
+    </style>
+</head>
+<body>
+    <div class="marca-superior">KombAUT 2025–2027</div>
+    <div class="container">
+        {% if session.get('logado') %}
+            <h1>Insira a foto</h1>
+            <form action="/" method="POST" enctype="multipart/form-data">
+                <input type="text" id="nome" name="nome" placeholder="Digite seu nome ou nome do momento" required />
+                <input type="date" id="data" name="data" required />
+                <input type="file" id="imagem" name="imagem" accept="image/*" onchange="mostrarPreview()" required />
+                <div class="preview" id="previewDiv">
+                    <p><strong>Pré-visualização:</strong></p>
+                    <img id="previewImg" src="#" alt="Pré-visualização da imagem" />
+                </div>
+                <button type="submit">Enviar</button>
+            </form>
+            <div class="botoes">
+                <a href="{{ url_for('galeria_view') }}"><button>Ver Galeria</button></a>
+                <a href="{{ url_for('logout') }}"><button>Sair</button></a>
+            </div>
+        {% else %}
+            <h1>Login</h1>
+            <form action="/" method="POST">
+                <input type="text" name="usuario" placeholder="Usuário" required>
+                <div class="senha-container">
+                    <input type="password" name="senha" id="senha" placeholder="Senha" required>
+                    <i class="fa-solid fa-eye-slash" id="iconeSenha" onclick="toggleSenha()"></i>
+                </div>
+                <button type="submit">Entrar</button>
+            </form>
+            <div class="botoes">
+                <a href="{{ url_for('galeria_view') }}"><button>Ver Galeria sem Login</button></a>
+            </div>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <ul style="color:red; margin-top:10px;">
+                        {% for msg in messages %}
+                            <li>{{ msg }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+        {% endif %}
+    </div>
+
+    <footer class="rodape">
+        <p>&copy; 2025 KombAUT - Todos os direitos reservados.</p>
+        <p>Desenvolvido por <a href="https://github.com/StkDev644" target="_blank">Caíque Dornelas</a></p>
+    </footer>
+
+    <script>
+function toggleSenha() {
+        const senha = document.getElementById('senha');
+        const icone = document.getElementById('iconeSenha');
+
+        const estaOculta = senha.type === 'password';
+
+        senha.type = estaOculta ? 'text' : 'password';
+
+        icone.classList.remove(estaOculta ? 'fa-eye-slash' : 'fa-eye');
+        icone.classList.add(estaOculta ? 'fa-eye' : 'fa-eye-slash');
+    }
+
+
+
+        function mostrarPreview() {
+            const file = document.getElementById('imagem').files[0];
+            const previewDiv = document.getElementById('previewDiv');
+            const previewImg = document.getElementById('previewImg');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    previewDiv.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                previewImg.src = "#";
+                previewDiv.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
